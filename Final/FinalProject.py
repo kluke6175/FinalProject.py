@@ -36,73 +36,62 @@ class TicTacToe:
         '''Starts a game loop of TicTacToe'''
         
         print('Welcome to Tic Tac Toe!')
-        self.board = [' '] * 10
+        self.board = Board()
         self.p1, self.p2 = inputPlayerLetter()
         turn = whoGoesFirst(self.p1, self.p2)
         print(turn + ' will go first.')
         
         gameIsPlaying = True
         while gameIsPlaying:
-            self.drawBoard()
+            self.board.draw()
             move = self.getPlayerMove(turn)
-            self.makeMove(turn, move)
+            self.board.makeMove(turn, move)
 
-            if self.isWinner(turn):
-                self.drawBoard()
+            if self.board.isWinner(turn):
+                self.board.draw()
                 print('{} has won the game!'.format(turn))
                 gameIsPlaying = False
             else:
-                if self.isBoardFull():
-                    self.drawBoard()
+                if self.board.isFull():
+                    self.board.draw()
                     print('The game is a tie!')
                     gameIsPlaying = False
                     break
                 else:
                     turn = togglePlayer(turn)
 
-    def drawBoard(self):
-        '''Displays the board.
-
-        "board" is a list of 10 strings representing the board (ignore index 0)'''
-        print('   |   |')
-        print(' ' + self.board[1] + ' | ' + self.board[2] + ' | ' + self.board[3])
-        print('   |   |')
-        print('-----------')
-        print('   |   |')
-        print(' ' + self.board[4] + ' | ' + self.board[5] + ' | ' + self.board[6])
-        print('   |   |')
-        print('-----------')
-        print('   |   |')
-        print(' ' + self.board[7] + ' | ' + self.board[8] + ' | ' + self.board[9])
-        print('   |   |')
-
     def getPlayerMove(self, letter):
         '''Prompt the player to type in their move.'''
         move = None
-        while move not in range(1,10) or not self.isSpaceFree(move):
+        while move not in range(1,10) or not self.board.isSpaceFree(move):
             print('What is your next move, {}? (1-9)'.format(letter))
             move = int(input())
         return move
 
-    def makeMove(self, letter, move):
-        self.board[move] = letter
 
-    def isWinner(self, letter):
-        '''Given a board and a player's letter, this function returns True if
-        that player has won. We use bo instead of board and le instead of
-        letter so we don't have to type as much.'''
-        return (
-            (self.board[7] == letter and self.board[8] == letter and self.board[9] == letter) or # across the top
-            (self.board[4] == letter and self.board[5] == letter and self.board[6] == letter) or # across the middle
-            (self.board[1] == letter and self.board[2] == letter and self.board[3] == letter) or # across the bottom
-            (self.board[7] == letter and self.board[4] == letter and self.board[1] == letter) or # down the left side
-            (self.board[8] == letter and self.board[5] == letter and self.board[2] == letter) or # down the middle
-            (self.board[9] == letter and self.board[6] == letter and self.board[3] == letter) or # down the right side
-            (self.board[7] == letter and self.board[5] == letter and self.board[3] == letter) or # diagonal
-            (self.board[9] == letter and self.board[5] == letter and self.board[1] == letter)    # diagonal
-        )
+class Board:
+    boxes = None
 
-    def isBoardFull(self):
+    def __init__(self):
+        self.boxes = [' '] * 10
+
+    def draw(self):
+        '''Displays the board.
+
+        "board" is a list of 10 strings representing the board (ignore index 0)'''
+        print('   |   |')
+        print(' ' + self.boxes[1] + ' | ' + self.boxes[2] + ' | ' + self.boxes[3])
+        print('   |   |')
+        print('-----------')
+        print('   |   |')
+        print(' ' + self.boxes[4] + ' | ' + self.boxes[5] + ' | ' + self.boxes[6])
+        print('   |   |')
+        print('-----------')
+        print('   |   |')
+        print(' ' + self.boxes[7] + ' | ' + self.boxes[8] + ' | ' + self.boxes[9])
+        print('   |   |')
+
+    def isFull(self):
         '''Return True if every space on the board has been taken.
         Otherwise return False.'''
         for i in range(1, 10):
@@ -110,9 +99,25 @@ class TicTacToe:
                 return False
         return True
 
-    def isSpaceFree(self, move):
-        '''Return true if the passed move is free on the passed board.'''
-        return self.board[move] == ' '
+    def isSpaceFree(self, box):
+        '''Return true if the specified box is free on this board.'''
+        return self.boxes[box] == ' '
+
+    def isWinner(self, letter):
+        '''Returns True if letter has won.'''
+        return (
+            (self.boxes[7] == letter and self.boxes[8] == letter and self.boxes[9] == letter) or # across the top
+            (self.boxes[4] == letter and self.boxes[5] == letter and self.boxes[6] == letter) or # across the middle
+            (self.boxes[1] == letter and self.boxes[2] == letter and self.boxes[3] == letter) or # across the bottom
+            (self.boxes[7] == letter and self.boxes[4] == letter and self.boxes[1] == letter) or # down the left side
+            (self.boxes[8] == letter and self.boxes[5] == letter and self.boxes[2] == letter) or # down the middle
+            (self.boxes[9] == letter and self.boxes[6] == letter and self.boxes[3] == letter) or # down the right side
+            (self.boxes[7] == letter and self.boxes[5] == letter and self.boxes[3] == letter) or # diagonal
+            (self.boxes[9] == letter and self.boxes[5] == letter and self.boxes[1] == letter)    # diagonal
+        )
+
+    def makeMove(self, letter, box):
+        self.boxes[box] = letter
 
 
 while True:
