@@ -26,6 +26,7 @@ def playAgain():
     print('Do you want to play again? (yes or no)')
     return input().lower().startswith('y')
 
+
 class TicTacToe:
     '''A game of TicTacToe'''
     board = None
@@ -38,18 +39,18 @@ class TicTacToe:
         print('Welcome to Tic Tac Toe!')
         self.board = Board()
         self.p1, self.p2 = inputPlayerLetter()
-        turn = whoGoesFirst(self.p1, self.p2)
-        print(turn + ' will go first.')
+        player = whoGoesFirst(self.p1, self.p2)
+        print(player + ' will go first.')
         
         gameIsPlaying = True
         while gameIsPlaying:
             self.board.draw()
-            move = self.getPlayerMove(turn)
-            self.board.makeMove(turn, move)
+            move = self.getMove(player)
+            self.board.makeMove(player, move)
 
-            if self.board.isWinner(turn):
+            if self.board.isWinner(player):
                 self.board.draw()
-                print('{} has won the game!'.format(turn))
+                print('{} has won the game!'.format(player))
                 gameIsPlaying = False
             else:
                 if self.board.isFull():
@@ -58,9 +59,9 @@ class TicTacToe:
                     gameIsPlaying = False
                     break
                 else:
-                    turn = togglePlayer(turn)
+                    player = togglePlayer(player)
 
-    def getPlayerMove(self, letter):
+    def getMove(self, letter):
         '''Prompt the player to type in their move.'''
         move = None
         while move not in range(1,10) or not self.board.isSpaceFree(move):
