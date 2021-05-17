@@ -64,7 +64,7 @@ class TicTacToe:
     def getMove(self, letter):
         '''Prompt the player to type in their move.'''
         move = None
-        while move not in range(1,10) or not self.board.isSpaceFree(move):
+        while not self.board.isValidMove(move):
             print('What is your next move, {}? (1-9)'.format(letter))
             move = int(input())
         return move
@@ -119,6 +119,9 @@ class Board:
 
     def makeMove(self, letter, box):
         self.boxes[box] = letter
+    
+    def isValidMove(self, move):
+        return move in range(1,10) and self.isSpaceFree(move)
 
 
 while True:
