@@ -1,32 +1,5 @@
 import random
 
-def inputPlayerLetter():
-    '''Lets the player choose which letter they want to be.
-    
-    Returns a list with player 1's letter as the first item,
-    and player 2's letter as the second.'''
-    letter = None
-    allowed_letters = ['X', 'O']
-    prompt = 'Player 1, Do you want to be X or O? '
-    while letter not in allowed_letters:
-        letter = input(prompt).upper()
-    return ['X', 'O'] if letter.upper() == 'X' else ['O', 'X']
-
-def whoGoesFirst(p1, p2):
-    '''Randomly choose the player who goes first.'''
-    return p1 if random.randint(0, 1) == 0 else p2
-
-def togglePlayer(currentPlayer):
-    '''Returns the letter of the next player'''
-    return 'O' if currentPlayer == 'X' else 'X'
-
-def playAgain():
-    '''This function returns True if the player wants to play again, otherwise
-    it returns False.'''
-    print('Do you want to play again? (yes or no)')
-    return input().lower().startswith('y')
-
-
 class TicTacToe:
     '''A game of TicTacToe'''
     board = None
@@ -38,8 +11,8 @@ class TicTacToe:
         
         print('Welcome to Tic Tac Toe!')
         self.board = Board()
-        self.p1, self.p2 = inputPlayerLetter()
-        player = whoGoesFirst(self.p1, self.p2)
+        self.p1, self.p2 = self.inputPlayerLetter()
+        player = self.whoGoesFirst(self.p1, self.p2)
         print(player + ' will go first.')
         
         gameIsPlaying = True
@@ -59,7 +32,7 @@ class TicTacToe:
                     gameIsPlaying = False
                     break
                 else:
-                    player = togglePlayer(player)
+                    player = self.togglePlayer(player)
 
     def getMove(self, letter):
         '''Prompt the player to type in their move.'''
@@ -68,6 +41,32 @@ class TicTacToe:
             print('What is your next move, {}? (1-9)'.format(letter))
             move = int(input())
         return move
+
+    def inputPlayerLetter(self):
+        '''Lets the player choose which letter they want to be.
+        
+        Returns a list with player 1's letter as the first item,
+        and player 2's letter as the second.'''
+        letter = None
+        allowed_letters = ['X', 'O']
+        prompt = 'Player 1, Do you want to be X or O? '
+        while letter not in allowed_letters:
+            letter = input(prompt).upper()
+        return ['X', 'O'] if letter.upper() == 'X' else ['O', 'X']
+
+    def whoGoesFirst(self, p1, p2):
+        '''Randomly choose the player who goes first.'''
+        return p1 if random.randint(0, 1) == 0 else p2
+
+    def togglePlayer(self, currentPlayer):
+        '''Returns the letter of the next player'''
+        return 'O' if currentPlayer == 'X' else 'X'
+
+    def playAgain(self):
+        '''This function returns True if the player wants to play again, otherwise
+        it returns False.'''
+        print('Do you want to play again? (yes or no)')
+        return input().lower().startswith('y')
 
 
 class Board:
@@ -78,7 +77,6 @@ class Board:
 
     def draw(self):
         '''Displays the board.
-
         "board" is a list of 10 strings representing the board (ignore index 0)'''
         print('   |   |')
         print(' ' + self.boxes[1] + ' | ' + self.boxes[2] + ' | ' + self.boxes[3])
@@ -127,5 +125,5 @@ class Board:
 while True:
     game = TicTacToe()
     game.start()
-    if not playAgain():
+    if not game.playAgain():
         break
